@@ -1,0 +1,33 @@
+\set ON_ERROR_ROLLBACK 1
+\set ON_ERROR_STOP true
+
+BEGIN;
+SELECT plan(1);
+
+INSERT INTO
+  import_tels
+VALUES
+  ('AAA 111111    11111               ')
+, ('AAA 222222    22222               ')
+, ('AAA 333333    33333               ')
+, ('AAA 444444    44444               ')
+;
+
+INSERT INTO
+  result_split_tels
+VALUES
+  ('AAA', '111111', '11111')
+, ('AAA', '222222', '22222')
+, ('AAA', '333333', '33333')
+, ('AAA', '444444', '44444')
+;
+
+CALL proc_split_tels();
+SELECT results_eq(
+  'SELECT * FROM split_tels ORDER BY cf_company, cd_person'
+, 'SELECT * FROM result_split_tels ORDER BY cf_company, cd_person'
+, 'proc_split_tels_1'
+);
+
+SELECT * FROM finish();
+ROLLBACK;

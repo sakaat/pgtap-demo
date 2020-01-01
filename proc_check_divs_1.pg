@@ -1,0 +1,42 @@
+\set ON_ERROR_ROLLBACK 1
+\set ON_ERROR_STOP true
+
+BEGIN;
+SELECT plan(1);
+
+INSERT INTO
+  split_users
+VALUES
+  ('AAA', '111111', 'B111', '1234', 'aiba',      'masaki',   null)
+, ('AAA', '222222', 'B666', '5678', 'matsumoto', 'jun',      null)
+, ('AAA', '333333', 'B111', '5678', 'ninomiya',  'kazunari', null)
+, ('AAA', '444444', 'B111', '7777', 'ohno',      'satoshi',  null)
+, ('AAA', '555555', 'B111', '1234', 'sakurai',   'sho',      null)
+;
+
+INSERT INTO
+  split_divs
+VALUES
+  ('1234', 'IT Dev 31.')
+, ('5678', 'IT Dev 32.')
+;
+
+INSERT INTO
+  result_split_users
+VALUES
+  ('AAA', '111111', 'B111', '1234', 'aiba',      'masaki',   null)
+, ('AAA', '222222', 'B666', '5678', 'matsumoto', 'jun',      null)
+, ('AAA', '333333', 'B111', '5678', 'ninomiya',  'kazunari', null)
+, ('AAA', '444444', 'B111', '7777', 'ohno',      'satoshi',  'ERROR-DIVS')
+, ('AAA', '555555', 'B111', '1234', 'sakurai',   'sho',      null)
+;
+
+CALL proc_check_divs();
+SELECT results_eq(
+  'SELECT * FROM split_users ORDER BY cf_company, cd_person'
+, 'SELECT * FROM result_split_users ORDER BY cf_company, cd_person'
+, 'proc_check_divs_1'
+);
+
+SELECT * FROM finish();
+ROLLBACK;

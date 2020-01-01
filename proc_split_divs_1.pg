@@ -1,0 +1,29 @@
+\set ON_ERROR_ROLLBACK 1
+\set ON_ERROR_STOP true
+
+BEGIN;
+SELECT plan(1);
+
+INSERT INTO
+  import_divs
+VALUES
+  ('1234IT Dev 31.                      ')
+, ('5678IT Dev 32.                      ')
+;
+
+INSERT INTO
+  result_split_divs
+VALUES
+  ('1234', 'IT Dev 31.')
+, ('5678', 'IT Dev 32.')
+;
+
+CALL proc_split_divs();
+SELECT results_eq(
+  'SELECT * FROM split_divs ORDER BY cd_div'
+, 'SELECT * FROM result_split_divs ORDER BY cd_div'
+, 'proc_split_divs_1'
+);
+
+SELECT * FROM finish();
+ROLLBACK;
