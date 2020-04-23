@@ -1,1 +1,2 @@
 *.pg linguist-language=PLpgSQL
+*.sql linguist-language=PLpgSQL
