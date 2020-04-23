@@ -10,7 +10,8 @@ ENV PGTAP_VERSION=v1.1.0
 RUN git clone git://github.com/theory/pgtap.git \
     && cd pgtap \
     && git checkout tags/$PGTAP_VERSION \
-    && make
+    && make \
+    && make install
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres"]
