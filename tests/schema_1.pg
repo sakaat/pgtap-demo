@@ -1,0 +1,36 @@
+BEGIN;
+SELECT plan(22);
+
+SELECT has_table('import_users');
+SELECT has_table('import_deps');
+SELECT has_table('import_divs');
+SELECT has_table('import_tels');
+
+SELECT has_table('split_users');
+SELECT has_table('split_deps');
+SELECT has_table('split_divs');
+SELECT has_table('split_tels');
+
+SELECT has_table('result_split_users');
+SELECT has_table('result_split_deps');
+SELECT has_table('result_split_divs');
+SELECT has_table('result_split_tels');
+
+SELECT has_table('users');
+SELECT has_table('result_users');
+
+SELECT has_column('users', 'cf_company');
+SELECT has_column('users', 'cd_person');
+SELECT has_column('users', 'cd_dep');
+SELECT has_column('users', 'cd_div');
+SELECT has_column('users', 'lastname');
+SELECT has_column('users', 'firstname');
+SELECT has_column('users', 'no_tel');
+
+SELECT col_is_pk(
+    'users',
+    ARRAY['cf_company', 'cd_person']
+);
+
+SELECT * FROM finish();
+ROLLBACK;
